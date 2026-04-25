@@ -1,17 +1,58 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+
+type Categoria = {
+  id: string;
+  nombre: string;
+  descripcion: string;
+};
+
+const categorias: Categoria[] = [
+  {
+    id: "todas",
+    nombre: "Todas",
+    descripcion: "Mezcla de todas las categorias",
+  },
+  {
+    id: "historia",
+    nombre: "Historia",
+    descripcion: "Independencia, politica y fechas clave",
+  },
+  {
+    id: "geografia",
+    nombre: "Geografia",
+    descripcion: "Departamentos, rios y ciudades",
+  },
+  {
+    id: "cultura",
+    nombre: "Cultura",
+    descripcion: "Literatura, tradiciones y simbolos",
+  },
+  {
+    id: "deportes",
+    nombre: "Deportes",
+    descripcion: "Futbol, ciclismo y atletismo",
+  },
+  {
+    id: "musica",
+    nombre: "Musica",
+    descripcion: "Cumbia, vallenato y artistas",
+  },
+];
 
 export default function RegistroScreen() {
   const router = useRouter();
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
+  const [categoria, setCategoria] = useState("todas");
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
 
@@ -36,7 +77,7 @@ export default function RegistroScreen() {
       }
       router.push({
         pathname: "/game",
-        params: { usuario_id: data.id, nombre: data.nombre },
+        params: { usuario_id: data.id, nombre: data.nombre, categoria },
       });
     } catch (e) {
       setError("No se pudo conectar con el servidor");
@@ -45,11 +86,11 @@ export default function RegistroScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.titulo}>Crear cuenta</Text>
         <Text style={styles.subtitulo}>
-          Ingresa tus datos para guardar tu puntaje
+          Ingresa tus datos y elige una categoria
         </Text>
       </View>
 
@@ -74,6 +115,28 @@ export default function RegistroScreen() {
           autoCapitalize="none"
         />
 
+        <Text style={styles.label}>Categoria</Text>
+        <View style={styles.categorias}>
+          {categorias.map((cat) => (
+            <TouchableOpacity
+              key={cat.id}
+              style={categoria === cat.id ? styles.catSeleccionada : styles.cat}
+              onPress={() => setCategoria(cat.id)}
+            >
+              <Text
+                style={
+                  categoria === cat.id
+                    ? styles.catTextoSeleccionado
+                    : styles.catTexto
+                }
+              >
+                {cat.nombre}
+              </Text>
+              <Text style={styles.catDescripcion}>{cat.descripcion}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         <TouchableOpacity
@@ -86,21 +149,22 @@ export default function RegistroScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scroll: {
     flex: 1,
     backgroundColor: "#0D0D0D",
+  },
+  container: {
     paddingHorizontal: 24,
     paddingVertical: 60,
-    justifyContent: "center",
   },
   header: {
     alignItems: "center",
-    marginBottom: 40,
+    marginBottom: 32,
   },
   titulo: {
     fontSize: 32,
@@ -131,6 +195,39 @@ const styles = StyleSheet.create({
     fontSize: 15,
     borderWidth: 1,
     borderColor: "#2A2A2A",
+  },
+  categorias: {
+    gap: 8,
+    marginTop: 4,
+  },
+  cat: {
+    backgroundColor: "#1A1A1A",
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#2A2A2A",
+  },
+  catSeleccionada: {
+    backgroundColor: "#1A1A1A",
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#FFD700",
+  },
+  catTexto: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  catTextoSeleccionado: {
+    color: "#FFD700",
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  catDescripcion: {
+    color: "#555555",
+    fontSize: 12,
+    marginTop: 2,
   },
   error: {
     color: "#FF4444",

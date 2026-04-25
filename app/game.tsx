@@ -1,11 +1,25 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { preguntas } from "./preguntas";
+import {
+  Categoria,
+  obtenerAleatorias,
+  obtenerPorCategoria
+} from "./preguntas";
 
 export default function GameScreen() {
   const router = useRouter();
-  const { usuario_id, nombre } = useLocalSearchParams();
+  const { usuario_id, nombre, categoria } = useLocalSearchParams();
+
+  const obtenerPreguntas = () => {
+    if (!categoria || categoria === "todas") {
+      return obtenerAleatorias(10);
+    }
+    const porCategoria = obtenerPorCategoria(categoria as Categoria);
+    return porCategoria.length >= 5 ? porCategoria : obtenerAleatorias(10);
+  };
+
+  const [listado] = useState(obtenerPreguntas());
   const [indice, setIndice] = useState(0);
   const [seleccionada, setSeleccionada] = useState<number | null>(null);
   const [respondida, setRespondida] = useState(false);
@@ -13,7 +27,7 @@ export default function GameScreen() {
   const [correctas, setCorrectas] = useState(0);
   const [tiempo, setTiempo] = useState(15);
 
-  const pregunta = preguntas[indice];
+  const pregunta = listado[indice];
 
   useEffect(() => {
     setTiempo(15);
@@ -69,11 +83,11 @@ export default function GameScreen() {
   };
 
   const siguiente = async () => {
-    if (indice + 1 >= preguntas.length) {
+    if (indice + 1 >= listado.length) {
       await guardarPuntaje(puntaje, correctas);
       router.push({
         pathname: "/resultado",
-        params: { puntaje, correctas, nombre },
+        params: { puntaje, correctas, nombre, total: listado.length },
       });
     } else {
       setIndice((i) => i + 1);
@@ -99,9 +113,15 @@ export default function GameScreen() {
         <Text style={styles.puntaje}>Puntaje: {puntaje}</Text>
         <Text style={[styles.tiempo, { color: colorTiempo() }]}>{tiempo}s</Text>
         <Text style={styles.preguntaNum}>
-          {indice + 1} / {preguntas.length}
+          {indice + 1} / {listado.length}
         </Text>
       </View>
+
+      {pregunta.categoria && (
+        <Text style={styles.categoriaLabel}>
+          {pregunta.categoria.toUpperCase()}
+        </Text>
+      )}
 
       <View style={styles.tarjeta}>
         <Text style={styles.preguntaTexto}>{pregunta.texto}</Text>
@@ -125,7 +145,7 @@ export default function GameScreen() {
       {respondida && (
         <TouchableOpacity style={styles.btnSiguiente} onPress={siguiente}>
           <Text style={styles.btnSiguienteTexto}>
-            {indice + 1 >= preguntas.length
+            {indice + 1 >= listado.length
               ? "Ver resultado"
               : "Siguiente pregunta"}
           </Text>
@@ -145,7 +165,7 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 40,
+    marginBottom: 8,
   },
   puntaje: {
     color: "#888888",
@@ -159,11 +179,18 @@ const styles = StyleSheet.create({
     color: "#888888",
     fontSize: 14,
   },
+  categoriaLabel: {
+    color: "#FFD700",
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 1.5,
+    marginBottom: 12,
+  },
   tarjeta: {
     backgroundColor: "#1A1A1A",
     borderRadius: 16,
     padding: 28,
-    marginBottom: 32,
+    marginBottom: 24,
     borderWidth: 1,
     borderColor: "#2A2A2A",
   },
