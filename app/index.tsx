@@ -21,13 +21,16 @@ export default function HomeScreen() {
 
         <TouchableOpacity
           style={styles.btnSecondary}
+          onPress={() => router.push("/multijugador")}
+        >
+          <Text style={styles.btnSecondaryText}>Multijugador</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.btnSecondary}
           onPress={() => router.push("/ranking")}
         >
           <Text style={styles.btnSecondaryText}>Ver ranking</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btnSecondary}>
-          <Text style={styles.btnSecondaryText}>Iniciar sesion</Text>
         </TouchableOpacity>
       </View>
 

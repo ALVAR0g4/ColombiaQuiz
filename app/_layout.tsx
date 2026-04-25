@@ -8,6 +8,7 @@ export default function RootLayout() {
       <Stack.Screen name="game" />
       <Stack.Screen name="resultado" />
       <Stack.Screen name="ranking" />
+      <Stack.Screen name="multijugador" />
     </Stack>
   );
 }
