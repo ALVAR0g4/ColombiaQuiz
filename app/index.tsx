@@ -14,12 +14,15 @@ export default function HomeScreen() {
       <View style={styles.buttons}>
         <TouchableOpacity
           style={styles.btnPrimary}
-          onPress={() => router.push("/game")}
+          onPress={() => router.push("/registro")}
         >
           <Text style={styles.btnPrimaryText}>Jugar ahora</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btnSecondary}>
+        <TouchableOpacity
+          style={styles.btnSecondary}
+          onPress={() => router.push("/ranking")}
+        >
           <Text style={styles.btnSecondaryText}>Ver ranking</Text>
         </TouchableOpacity>
 

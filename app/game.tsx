@@ -1,10 +1,11 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { preguntas } from "./preguntas";
 
 export default function GameScreen() {
   const router = useRouter();
+  const { usuario_id, nombre } = useLocalSearchParams();
   const [indice, setIndice] = useState(0);
   const [seleccionada, setSeleccionada] = useState<number | null>(null);
   const [respondida, setRespondida] = useState(false);
@@ -47,11 +48,32 @@ export default function GameScreen() {
     }
   };
 
-  const siguiente = () => {
+  const guardarPuntaje = async (
+    puntajeFinal: number,
+    correctasFinal: number,
+  ) => {
+    if (!usuario_id) return;
+    try {
+      await fetch("http://localhost:3000/puntajes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          usuario_id: Number(usuario_id),
+          puntaje: puntajeFinal,
+          correctas: correctasFinal,
+        }),
+      });
+    } catch (e) {
+      console.log("Error guardando puntaje:", e);
+    }
+  };
+
+  const siguiente = async () => {
     if (indice + 1 >= preguntas.length) {
+      await guardarPuntaje(puntaje, correctas);
       router.push({
         pathname: "/resultado",
-        params: { puntaje: puntaje, correctas: correctas },
+        params: { puntaje, correctas, nombre },
       });
     } else {
       setIndice((i) => i + 1);
