@@ -70,11 +70,14 @@ export default function RegistroScreen() {
     setCargando(true);
     setError("");
     try {
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        "https://colombiaquiz-backend-production.up.railway.app/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        },
+      );
       const data = await response.json();
       if (!response.ok) {
         setError(data.error || "Error al iniciar sesion");
@@ -99,11 +102,14 @@ export default function RegistroScreen() {
     setCargando(true);
     setError("");
     try {
-      const response = await fetch("http://localhost:3000/usuarios", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, email }),
-      });
+      const response = await fetch(
+        "https://colombiaquiz-backend-production.up.railway.app/usuarios",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, email }),
+        },
+      );
       const data = await response.json();
       if (!response.ok) {
         setError(data.error || "Error al registrar");

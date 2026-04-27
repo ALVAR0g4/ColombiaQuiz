@@ -1,16 +1,16 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { io, Socket } from "socket.io-client";
 import { preguntas } from "./preguntas";
 
-const SERVIDOR = "http://localhost:3000";
+const SERVIDOR = "https://colombiaquiz-backend-production.up.railway.app";
 
 export default function MultijugadorScreen() {
   const router = useRouter();

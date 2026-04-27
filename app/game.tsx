@@ -1,11 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import {
-  Categoria,
-  obtenerAleatorias,
-  obtenerPorCategoria
-} from "./preguntas";
+import { Categoria, obtenerAleatorias, obtenerPorCategoria } from "./preguntas";
 
 export default function GameScreen() {
   const router = useRouter();
@@ -68,15 +64,18 @@ export default function GameScreen() {
   ) => {
     if (!usuario_id) return;
     try {
-      await fetch("http://localhost:3000/puntajes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          usuario_id: Number(usuario_id),
-          puntaje: puntajeFinal,
-          correctas: correctasFinal,
-        }),
-      });
+      await fetch(
+        "https://colombiaquiz-backend-production.up.railway.app/puntajes",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            usuario_id: Number(usuario_id),
+            puntaje: puntajeFinal,
+            correctas: correctasFinal,
+          }),
+        },
+      );
     } catch (e) {
       console.log("Error guardando puntaje:", e);
     }

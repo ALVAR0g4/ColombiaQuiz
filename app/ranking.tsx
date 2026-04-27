@@ -1,11 +1,11 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 type Jugador = {
@@ -20,7 +20,7 @@ export default function RankingScreen() {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3000/ranking")
+    fetch("https://colombiaquiz-backend-production.up.railway.app/ranking")
       .then((res) => res.json())
       .then((data) => {
         setRanking(data);
