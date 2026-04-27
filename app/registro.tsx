@@ -46,6 +46,11 @@ const categorias: Categoria[] = [
     nombre: "Musica",
     descripcion: "Cumbia, vallenato y artistas",
   },
+  {
+    id: "curiosidades",
+    nombre: "Curiosidades",
+    descripcion: "Datos sorprendentes sobre Colombia",
+  },
 ];
 
 export default function RegistroScreen() {
